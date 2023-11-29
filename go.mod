@@ -2,7 +2,10 @@ module github.com/just-mitch/clogd
 
 go 1.21.4
 
-require github.com/gorilla/mux v1.8.1
+require (
+	github.com/gorilla/mux v1.8.1
+	github.com/tysonmote/gommap v0.0.2
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
