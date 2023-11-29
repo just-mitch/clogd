@@ -10,7 +10,7 @@ import (
 var (
 	offWidth uint64 = 4
 	posWidth uint64 = 8
-	entWidth        = offWidth + lenWidth
+	entWidth        = offWidth + posWidth
 )
 
 type index struct {
@@ -69,6 +69,10 @@ func (i *index) Write(off uint32, pos uint64) error {
 	enc.PutUint64(i.mmap[i.size+offWidth:i.size+entWidth], pos)
 	i.size += entWidth
 	return nil
+}
+
+func (i *index) Name() string {
+	return i.file.Name()
 }
 
 func (i *index) Close() error {
