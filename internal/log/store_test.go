@@ -62,6 +62,8 @@ func testAppend(t *testing.T, s *store) {
 	for i := uint64(1); i < 4; i++ {
 		n, pos, err := s.Append(write)
 		require.NoError(t, err)
+		_, err = s.Hash()
+		require.NoError(t, err)
 		require.Equal(t, pos+n, i*width)
 	}
 }
