@@ -12,6 +12,27 @@ var (
 	width = uint64(len(write)) + lenWidth
 )
 
+func TestStoreHash(t *testing.T) {
+	f, err := os.CreateTemp("", "store_append_hash_test")
+	require.NoError(t, err)
+	defer os.Remove(f.Name())
+
+	s, err := newStore(f)
+	require.NoError(t, err)
+	require.Equal(t, uint64(0), s.size)
+
+	hash, err := s.Hash()
+	require.NoError(t, err)
+	require.Equal(t, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", hash)
+
+	s.Append(write)
+
+	hash, err = s.Hash()
+	require.NoError(t, err)
+	require.Equal(t, "bf5d969ac1b27d9352c04db2872c44a38d1c337b04af56fbc166407ab986fb1e", hash)
+
+}
+
 func TestStoreAppendRead(t *testing.T) {
 	f, err := os.CreateTemp("", "store_append_read_test")
 	require.NoError(t, err)
@@ -22,6 +43,12 @@ func TestStoreAppendRead(t *testing.T) {
 	require.Equal(t, uint64(0), s.size)
 
 	testAppend(t, s)
+	// hashing should not interfere with reading
+	_, err = s.Hash()
+	require.NoError(t, err)
+	testRead(t, s)
+	_, err = s.Hash()
+	require.NoError(t, err)
 	testRead(t, s)
 	testReadAt(t, s)
 

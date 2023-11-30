@@ -2,7 +2,11 @@ package log
 
 import (
 	"bufio"
+	"crypto/sha256"
 	"encoding/binary"
+	"fmt"
+
+	"io"
 	"os"
 	"sync"
 )
@@ -89,4 +93,29 @@ func (s *store) Close() error {
 		return err
 	}
 	return s.File.Close()
+}
+
+func (s *store) Hash() (string, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	// Flush the buffer to ensure all writes are committed to the file
+	if err := s.buf.Flush(); err != nil {
+		return "", err
+	}
+
+	// Seek to the beginning of the file
+	if _, err := s.File.Seek(0, 0); err != nil {
+		return "", err
+	}
+
+	// Read all contents of the file
+	b, err := io.ReadAll(s.File)
+	if err != nil {
+		return "", err
+	}
+
+	// Compute the hash
+	hash := sha256.Sum256(b)
+	return fmt.Sprintf("%x", hash), nil
 }

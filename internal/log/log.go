@@ -182,6 +182,10 @@ func (o *originReader) Read(p []byte) (int, error) {
 	return n, err
 }
 
+func (l *Log) Hash() (string, error) {
+	return l.activeSegment.store.Hash()
+}
+
 func (l *Log) newSegment(off uint64) error {
 	s, err := newSegment(l.Dir, off, l.Config)
 	if err != nil {
