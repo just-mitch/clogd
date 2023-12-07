@@ -39,6 +39,7 @@ require (
 require (
 	github.com/casbin/casbin v1.9.1
 	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/stretchr/testify v1.8.4
 	google.golang.org/protobuf v1.31.0
 )

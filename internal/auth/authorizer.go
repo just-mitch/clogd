@@ -12,7 +12,8 @@ type Authorizer struct {
 	enforcer *casbin.Enforcer
 }
 
-func New(enforcer *casbin.Enforcer) *Authorizer {
+func New(model, policy string) *Authorizer {
+	enforcer := casbin.NewEnforcer(model, policy)
 	return &Authorizer{enforcer: enforcer}
 }
 
